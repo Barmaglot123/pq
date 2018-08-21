@@ -12,8 +12,7 @@ import (
 	"strings"
 	"sync"
 	"time"
-
-	"github.com/lib/pq/oid"
+	"github.com/Barmaglot123/pq/oid"
 )
 
 func binaryEncode(parameterStatus *parameterStatus, x interface{}) []byte {
@@ -135,6 +134,8 @@ func textDecode(parameterStatus *parameterStatus, s []byte, typ oid.Oid) interfa
 // and appends to buf
 func appendEncodedText(parameterStatus *parameterStatus, buf []byte, x interface{}) []byte {
 	switch v := x.(type) {
+	case driver.NonEscapeString:
+		return x.(driver.NonEscapeString).InnerBytes
 	case int64:
 		return strconv.AppendInt(buf, v, 10)
 	case float64:
